@@ -1,14 +1,34 @@
-﻿using System;
+﻿using ListaDeCompras.Compartilhado;
 
-namespace ListaDeCompras
+TelaPrincipal telaPrincipal = new TelaPrincipal();
+
+while (true)
 {
-    class Program
+    ITelaOpcoes? telaSelecionada = telaPrincipal.ObterOpcaoMenuPrincipal();
+
+    if (telaSelecionada == null)
+        break;
+
+    while (true)
     {
-        static void Main(string[] args)
+        string? opcaoMenuInterno = telaSelecionada.ObterOpcaoMenu();
+
+        if (opcaoMenuInterno == "S")
+            break;
+
+        if (telaSelecionada is TelaBase telaBase)
         {
-            Console.WriteLine("teste");
+            if (opcaoMenuInterno == "1")
+                telaBase.Cadastrar();
+
+            else if (opcaoMenuInterno == "2")
+                telaBase.Editar();
+
+            else if (opcaoMenuInterno == "3")
+                telaBase.Excluir();
+
+            else if (opcaoMenuInterno == "4")
+                telaBase.VisualizarTodos(true);
         }
-
     }
-
 }
