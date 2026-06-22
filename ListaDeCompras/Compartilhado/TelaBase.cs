@@ -41,6 +41,13 @@ namespace ListaDeCompras.Compartilhado
 
             EntidadeBase novaEntidade = ObterDadosCadastrais();
 
+            if (ExisteRegistroComInformacoesExclusivas(novaEntidade))
+            {
+                Console.WriteLine("Digite ENTER para continuar");
+                Console.ReadLine();
+                return;
+            }
+
             repositorio.Cadastrar(novaEntidade);
 
             Console.WriteLine("---------------------------------");
@@ -67,6 +74,13 @@ namespace ListaDeCompras.Compartilhado
 
             EntidadeBase entidadeAtualizada = ObterDadosCadastrais();
 
+            if (ExisteRegistroComInformacoesExclusivas(entidadeAtualizada, idSelecionado))
+            {
+                Console.WriteLine("Digite ENTER para continuar");
+                Console.ReadLine();
+                return;
+            }
+
             repositorio.Editar(idSelecionado, entidadeAtualizada);
 
             Console.WriteLine("---------------------------------");
@@ -89,6 +103,14 @@ namespace ListaDeCompras.Compartilhado
             Console.Write("Digite o ID do registro que deseja excluir: ");
             int idSelecionado = Convert.ToInt32(Console.ReadLine());
 
+            if (ExistemDependenciasAtivasDoRegistro(idSelecionado))
+            {
+                Console.WriteLine("Digente ENTER para continuar");
+                Console.ReadLine();
+                return;
+
+            }
+
             repositorio.Excluir(idSelecionado);
 
             Console.WriteLine("---------------------------------");
@@ -101,5 +123,17 @@ namespace ListaDeCompras.Compartilhado
         public abstract void VisualizarTodos(bool deveExibirCabecalho);
 
         protected abstract EntidadeBase ObterDadosCadastrais();
+
+        protected virtual bool ExisteRegistroComInformacoesExclusivas(EntidadeBase entidade, int? idIgnorado = null)
+        {
+            return false;
+        }
+
+        protected virtual bool ExistemDependenciasAtivasDoRegistro(int idRegistro)
+        {
+            return false;
+        }
+
+
     }
 }
