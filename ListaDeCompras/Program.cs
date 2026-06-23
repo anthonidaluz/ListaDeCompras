@@ -1,5 +1,4 @@
 ﻿using ListaDeCompras.Compartilhado;
-using ListaDeCompras.Modulos;
 
 TelaPrincipal telaPrincipal = new TelaPrincipal();
 

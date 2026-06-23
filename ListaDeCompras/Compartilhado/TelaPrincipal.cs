@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ListaDeCompras.ConsoleApp.Modulos.ModuloCategoria;
+using ListaDeCompras.Modulos.ModuloCategoria;
+using ListaDeCompras.Modulos.ModuloProduto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +9,21 @@ namespace ListaDeCompras.Compartilhado
 {
     public class TelaPrincipal
     {
+        private readonly RepositorioCategoria repositorioCategoria;
+        private readonly TelaCategoria telaCategoria;
+
+        private readonly RepositorioProduto repositorioProduto;
+        private readonly TelaProduto telaProduto;
+
+        public TelaPrincipal()
+        {
+            repositorioCategoria = new RepositorioCategoria();
+            telaCategoria = new TelaCategoria(repositorioCategoria);
+
+            repositorioProduto = new RepositorioProduto();
+            telaProduto = new TelaProduto(repositorioProduto, repositorioCategoria, telaCategoria);
+        }
+
         public ITelaOpcoes? ObterOpcaoMenuPrincipal()
         {
             Console.WriteLine("---------------------------------");
@@ -21,10 +39,10 @@ namespace ListaDeCompras.Compartilhado
             string? opcaoMenuPrincipal = Console.ReadLine()?.ToUpper();
 
             if (opcaoMenuPrincipal == "1")
-                return null;
+                return telaCategoria;
 
             if (opcaoMenuPrincipal == "2")
-                return null;
+                return telaProduto;
 
             if (opcaoMenuPrincipal == "3")
                 return null;
