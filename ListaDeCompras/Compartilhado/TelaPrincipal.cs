@@ -1,5 +1,7 @@
 ﻿using ListaDeCompras.ConsoleApp.Modulos.ModuloCategoria;
 using ListaDeCompras.Modulos.ModuloCategoria;
+using ListaDeCompras.Modulos.ModuloListaCompras;
+using ListaDeCompras.Modulos.ModuloListaDeCompras;
 using ListaDeCompras.Modulos.ModuloProduto;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,9 @@ namespace ListaDeCompras.Compartilhado
         private readonly RepositorioProduto repositorioProduto;
         private readonly TelaProduto telaProduto;
 
+        private readonly RepositorioListaCompras repositorioListaCompras;
+        private readonly TelaListaCompras telaListaCompras;
+
         public TelaPrincipal()
         {
             repositorioCategoria = new RepositorioCategoria();
@@ -22,6 +27,9 @@ namespace ListaDeCompras.Compartilhado
 
             repositorioProduto = new RepositorioProduto();
             telaProduto = new TelaProduto(repositorioProduto, repositorioCategoria, telaCategoria);
+
+            repositorioListaCompras = new RepositorioListaCompras();
+            telaListaCompras = new TelaListaCompras(repositorioListaCompras);
         }
 
         public ITelaOpcoes? ObterOpcaoMenuPrincipal()
@@ -45,7 +53,7 @@ namespace ListaDeCompras.Compartilhado
                 return telaProduto;
 
             if (opcaoMenuPrincipal == "3")
-                return null;
+                return telaListaCompras;
 
             return null;
         }
