@@ -1,5 +1,6 @@
 <img width="1080" height="600" alt="VsDebugConsole_D5rGXbzRIF" src="https://github.com/user-attachments/assets/d4145d3e-dd8b-4a7d-92f4-59211c33b464" />
-# Lista de Compras - Console App
+
+## Lista de Compras 
 
 Um sistema de gerenciamento de listas de compras desenvolvido em **C# (.NET)** para terminal (**Console Application**). O projeto aplica conceitos de **Programação Orientada a Objetos (POO)**, **Herança**, **Polimorfismo** e o padrão arquitetural de **Repository** para operações de CRUD em memória.
 
