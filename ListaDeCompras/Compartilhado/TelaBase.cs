@@ -17,6 +17,7 @@ namespace ListaDeCompras.Compartilhado
 
         public virtual string? ObterOpcaoMenu()
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("---------------------------------");
             Console.WriteLine($"Gestão de {nomeEntidade}s");
             Console.WriteLine("---------------------------------");

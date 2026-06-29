@@ -1,4 +1,6 @@
 ﻿using ListaDeCompras.Compartilhado;
+using ListaDeCompras.Modulos.ModuloItemLista; 
+using ListaDeCompras.Modulos.ModuloItensDaLista;
 using ListaDeCompras.Modulos.ModuloListaDeCompras;
 using System;
 
@@ -8,10 +10,17 @@ namespace ListaDeCompras.Modulos.ModuloListaCompras
     {
         private readonly RepositorioListaCompras repositorioListaCompras;
 
+        private RepositorioItensLista repositorioItemLista;
+
         public TelaListaCompras(RepositorioListaCompras repositorioListaCompras)
             : base("Lista de Compras", repositorioListaCompras)
         {
             this.repositorioListaCompras = repositorioListaCompras;
+        }
+
+        public void ConfigurarRepositorioItens(RepositorioItensLista repositorioItemLista)
+        {
+            this.repositorioItemLista = repositorioItemLista;
         }
 
         public override void VisualizarTodos(bool deveExibirCabecalho)
@@ -40,6 +49,20 @@ namespace ListaDeCompras.Modulos.ModuloListaCompras
                 int totalItens = 0;
                 decimal totalEstimado = 0m;
 
+                if (repositorioItemLista != null)
+                {
+                    EntidadeBase[] todosOsItens = repositorioItemLista.SelecionarTodos();
+                    for (int j = 0; j < todosOsItens.Length; j++)
+                    {
+                        ItemLista item = (ItemLista)todosOsItens[j];
+                        if (item != null && item.Lista.Id == l.Id)
+                        {
+                            totalItens++;
+                            totalEstimado += item.Quantidade * item.Produto.PrecoAproximado;
+                        }
+                    }
+                }
+
                 Console.WriteLine(
                     "{0, -5} | {1, -25} | {2, -15:dd/MM/yyyy} | {3, -10} | {4, -12} | {5, -15:C}",
                     l.Id, l.Nome, l.DataCriacao, l.Status, totalItens, totalEstimado
@@ -59,11 +82,11 @@ namespace ListaDeCompras.Modulos.ModuloListaCompras
             string? nome;
             do
             {
-                Console.Write("Informe o nome da lista (ex: Compras do Mês, Churrasco) [3 a 100 caracteres]: ");
+                Console.Write("Informe o nome da lista [3 a 100 caracteres]: ");
                 nome = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(nome) || nome.Length < 3 || nome.Length > 100)
-                    Console.WriteLine("[Erro] O nome deve ter entre 3 e 100 caracteres. Tente novamente.");
+                    Console.WriteLine("[Erro] O nome deve ter entre 3 e 100 caracteres.");
 
             } while (string.IsNullOrWhiteSpace(nome) || nome.Length < 3 || nome.Length > 100);
 
@@ -82,6 +105,22 @@ namespace ListaDeCompras.Modulos.ModuloListaCompras
 
         protected override bool ExistemDependenciasAtivasDoRegistro(int idRegistro)
         {
+            if (repositorioItemLista != null)
+            {
+                EntidadeBase[] todosOsItens = repositorioItemLista.SelecionarTodos();
+                for (int i = 0; i < todosOsItens.Length; i++)
+                {
+                    ItemLista item = (ItemLista)todosOsItens[i];
+                    if (item != null && item.Lista.Id == idRegistro)
+                    {
+                        Console.WriteLine("---------------------------------");
+                        Console.WriteLine("Erro: Não é possível excluir uma lista que possua itens vinculados!");
+                        Console.WriteLine("Remova os itens primeiro.");
+                        Console.WriteLine("---------------------------------");
+                        return true; 
+                    }
+                }
+            }
 
             return base.ExistemDependenciasAtivasDoRegistro(idRegistro);
         }

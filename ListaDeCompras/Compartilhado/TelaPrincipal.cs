@@ -1,5 +1,7 @@
 ﻿using ListaDeCompras.ConsoleApp.Modulos.ModuloCategoria;
 using ListaDeCompras.Modulos.ModuloCategoria;
+using ListaDeCompras.Modulos.ModuloItemLista;
+using ListaDeCompras.Modulos.ModuloItensDaLista;
 using ListaDeCompras.Modulos.ModuloListaCompras;
 using ListaDeCompras.Modulos.ModuloListaDeCompras;
 using ListaDeCompras.Modulos.ModuloProduto;
@@ -20,6 +22,9 @@ namespace ListaDeCompras.Compartilhado
         private readonly RepositorioListaCompras repositorioListaCompras;
         private readonly TelaListaCompras telaListaCompras;
 
+        private readonly RepositorioItensLista repositorioItensLista;
+        private readonly TelaItensLista telaItensLista;
+
         public TelaPrincipal()
         {
             repositorioCategoria = new RepositorioCategoria();
@@ -30,16 +35,31 @@ namespace ListaDeCompras.Compartilhado
 
             repositorioListaCompras = new RepositorioListaCompras();
             telaListaCompras = new TelaListaCompras(repositorioListaCompras);
+
+            repositorioItensLista = new RepositorioItensLista();
+
+            telaItensLista = new TelaItensLista(
+                repositorioItensLista,
+                repositorioListaCompras,
+                repositorioProduto,
+                telaListaCompras,
+                telaProduto
+            );
+
+            // Injetando o repositório de itens na tela de listas para calcular as somas automáticas
+            telaListaCompras.ConfigurarRepositorioItens(repositorioItensLista);
         }
 
         public ITelaOpcoes? ObterOpcaoMenuPrincipal()
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---------------------------------");
             Console.WriteLine("Lista de Compras");
             Console.WriteLine("---------------------------------");
             Console.WriteLine("1 - Gerenciar categorias");
             Console.WriteLine("2 - Gerenciar produtos");
             Console.WriteLine("3 - Gerenciar listas de compras");
+            Console.WriteLine("4 - Gerenciar itens das listas");
             Console.WriteLine("S - Sair");
             Console.WriteLine("---------------------------------");
             Console.Write("> ");
@@ -54,6 +74,9 @@ namespace ListaDeCompras.Compartilhado
 
             if (opcaoMenuPrincipal == "3")
                 return telaListaCompras;
+
+            if (opcaoMenuPrincipal == "4")
+                return telaItensLista;
 
             return null;
         }
